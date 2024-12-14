@@ -1,18 +1,15 @@
 import { createRoot } from 'react-dom/client'
-import { Main } from './main'
-import { BrowserRouter as Router } from 'react-router-dom'
-import { ConfigProvider } from 'antd'
-import zhCN from 'antd/locale/zh_CN'
+import Main from './main'
+import '@mysten/dapp-kit/dist/index.css'
+import './assets/css/basic.less'
+import './assets/css/tailwind.css'
+import 'animate.css'
 
 const container = document.querySelector('#root')
 if (container) {
   const root = createRoot(container)
   root.render(
-    <Router>
-      <ConfigProvider locale={zhCN}>
-        <Main />
-      </ConfigProvider>
-    </Router>
+    <Main />
   )
 }
 

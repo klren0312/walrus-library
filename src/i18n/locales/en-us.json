@@ -1,0 +1,18 @@
+{
+  "home": {
+    "title": "Walrus Library",
+    "subtitle": "A place for you to read and share",
+    "upload": "Share your books!"
+  },
+  "upload": {
+    "uploadTip": "Click or drag Cover Image to this area to upload",
+    "title": "Title",
+    "author": "Author",
+    "description": "Description",
+    "file": "File",
+    "uploadBtn": "Upload",
+    "submitBtn": "Submit",
+    "successTip": "Share successfully, thank you for your sharing",
+    "connectBtn": "Connect Wallet"
+  }
+}

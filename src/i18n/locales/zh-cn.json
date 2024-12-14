@@ -1,0 +1,18 @@
+{
+  "home": {
+    "title": "Walrus 图书馆",
+    "subtitle": "一个让你阅读和分享的地方",
+    "upload": "分享你的书籍吧！"
+  },
+  "upload": {
+    "uploadTip": "点击或拖动封面图片到此区域上传",
+    "title": "标题",
+    "author": "作者",
+    "description": "描述",
+    "file": "文件",
+    "uploadBtn": "上传",
+    "submitBtn": "提交",
+    "successTip": "分享成功，感谢您的分享",
+    "connectBtn": "连接钱包"
+  }
+}

@@ -4,8 +4,8 @@ import {
 	DEVNET_PACKAGE_ID,
 	MAINNET_PACKAGE_ID,
 	MAINNET_HAI_SERVER,
-	SUI_HAI_SERVER_DEVNET,
-	SUI_HAI_SERVER_TESTNET,
+	WALRUS_LIBRARY_SERVER_TESTNET,
+	WALRUS_LIBRARY_SERVER_DEVNET,
 } from './constants'
 import { createNetworkConfig } from '@mysten/dapp-kit'
 
@@ -37,14 +37,14 @@ const { networkConfig, useNetworkVariable, useNetworkVariables } =
 			url: getFullnodeUrl('testnet'),
 			variables: {
 				packageId: TESTNET_PACKAGE_ID,
-				server: SUI_HAI_SERVER_TESTNET,
+				server: WALRUS_LIBRARY_SERVER_TESTNET,
 			},
 		},
 		devnet: {
 			url: getFullnodeUrl('devnet'),
 			variables: {
 				packageId: DEVNET_PACKAGE_ID,
-				server: SUI_HAI_SERVER_DEVNET,
+				server: WALRUS_LIBRARY_SERVER_DEVNET,
 			},
 		},
 	})

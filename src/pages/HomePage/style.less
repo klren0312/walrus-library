@@ -1,0 +1,61 @@
+.scroll-down-btn {
+  position: absolute;
+  left: 50%;
+  bottom: 10%;
+  width: 24px;
+  height: 37px;
+  margin: 0 auto;
+  -webkit-transition: all .5s;
+  transition: all .5s;
+  -webkit-transform-style: preserve-3d;
+  border: 2px solid #98efe4;
+  border-radius: 99px;
+  cursor: pointer;
+  z-index: 1;
+  i {
+    position: absolute;
+    top: 7px;
+    left: 8px;
+    width: 5px;
+    height: 7px;
+    -webkit-transition: all .7s;
+    transition: all .7s;
+    -webkit-transform-style: preserve-3d;
+    -webkit-animation: 1.5s wheel_anim infinite;
+    animation: 1.5s wheel_anim infinite;
+    background: #98efe4;
+    border-radius: 25px;
+  }
+}
+
+@keyframes wheel_anim {
+  0% {
+    top: 7px;
+  }
+
+  20% {
+    top: 20px;
+  }
+
+  30% {
+    top: 7px;
+  }
+
+  50% {
+    top: 20px;
+  }
+
+  60% {
+    top: 7px;
+  }
+
+  to {
+    top: 7px;
+  }
+}
+
+.upload-icon:hover {
+  animation-name: headShake;
+  animation-duration: 1s;
+  animation-fill-mode: both;
+}
