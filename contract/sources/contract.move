@@ -3,7 +3,10 @@ use std::string::{String, utf8};
 use sui::event::{Self};
 use sui::package::{claim};
 use sui::display::{new_with_fields, update_version};
-
+use sui::balance::{Self,Balance};
+use sui::coin::{Self, Coin};
+use sui::sui::SUI;
+use sui::clock::{timestamp_ms, Clock};
 public struct WALRUS_LIBRARY has drop {}
 
 public struct BookServer has key, store {
@@ -11,6 +14,7 @@ public struct BookServer has key, store {
   total_book_size: u64,
   total_book_number: u64,
   total_member_number: u64,
+  pool: Balance<SUI>,
 }
 
 public struct Book has key, store {
@@ -22,6 +26,7 @@ public struct Book has key, store {
   blob_id: String,
   creator: address,
   size: u64,
+  content_type: String,
 }
 
 public struct BookCreatorNft has key, store {
@@ -31,8 +36,10 @@ public struct BookCreatorNft has key, store {
   description: String,
   book_number: u64,
   index: u64,
+  donate_amount: u64,
 }
 
+// mint creator nft event
 public struct CreateBookCreatorNftEvent has copy, drop {
   name: String,
   image_url: String,
@@ -41,6 +48,7 @@ public struct CreateBookCreatorNftEvent has copy, drop {
   address: address,
 }
 
+// create book event
 public struct CreateBookEvent has copy, drop {
   title: String,
   author: String,
@@ -48,6 +56,14 @@ public struct CreateBookEvent has copy, drop {
   blob_id: String,
   creator: address,
   size: u64,
+  content_type: String,
+}
+
+// donate server event
+public struct DonateServerEvent has copy, drop {
+  amount: u64,
+  address: address,
+  timestamp: u64,
 }
 
 // 初始化合约, 创建BookServer对象
@@ -58,6 +74,7 @@ fun init (otw: WALRUS_LIBRARY, ctx: &mut TxContext) {
     total_book_size: 0,
     total_book_number: 0,
     total_member_number: 0,
+    pool: balance::zero(),
   };
   transfer::share_object(book_server);
 
@@ -75,7 +92,7 @@ fun init (otw: WALRUS_LIBRARY, ctx: &mut TxContext) {
   let values = vector[
     utf8(b"{name}"),
     utf8(b"https://walrus-library.walrus.site"),
-    utf8(b"https://aggregator.walrus-testnet.walrus.space/v1/ZShE1ukB6HddLeUQemkh0lSIUiCubpxp7lB1_Whvu3c"),
+    utf8(b"https://aggregator.walrus-testnet.walrus.space/v1/7lJpg5iPzXAcG759P1d30mCNfRXjt_mYeWR228GLjyw"),
     utf8(b"{description}"),
     utf8(b"{index}"),
     utf8(b"{book_number}"),
@@ -96,25 +113,35 @@ fun init (otw: WALRUS_LIBRARY, ctx: &mut TxContext) {
 }
 
 // mint BookCreatorNft
-#[allow(lint(self_transfer))]
-public fun mint_book_creator_nft(
+fun get_book_creator_nft(
   book_server: &mut BookServer,
   ctx: &mut TxContext,
-) {
+): BookCreatorNft {
   book_server.total_member_number = book_server.total_member_number + 1;
   let book_creator_nft = BookCreatorNft{
     id: object::new(ctx),
     name: utf8(b"Walrus Library Creator NFT"),
-    image_url: utf8(b"https://aggregator.walrus-testnet.walrus.space/v1/ZShE1ukB6HddLeUQemkh0lSIUiCubpxp7lB1_Whvu3c"),
+    image_url: utf8(b"https://aggregator.walrus-testnet.walrus.space/v1/7lJpg5iPzXAcG759P1d30mCNfRXjt_mYeWR228GLjyw"),
     description: utf8(b"Walrus Library Creator NFT"),
     book_number: 0,
     index: book_server.total_member_number,
+    donate_amount: 0,
   };
+  book_creator_nft
+}
+
+// 发送creator nft
+#[allow(lint(self_transfer))]
+public fun send_book_creator_nft(
+  book_server: &mut BookServer,
+  book_creator_nft: BookCreatorNft,
+  ctx: &mut TxContext,
+) {
   transfer::public_transfer(book_creator_nft, tx_context::sender(ctx));
 
   event::emit(CreateBookCreatorNftEvent {
     name: utf8(b"Walrus Library Creator NFT"),
-    image_url: utf8(b"https://aggregator.walrus-testnet.walrus.space/v1/ZShE1ukB6HddLeUQemkh0lSIUiCubpxp7lB1_Whvu3c"),
+    image_url: utf8(b"https://aggregator.walrus-testnet.walrus.space/v1/7lJpg5iPzXAcG759P1d30mCNfRXjt_mYeWR228GLjyw"),
     description: utf8(b"Walrus Library Creator NFT"),
     index: book_server.total_member_number,
     address: tx_context::sender(ctx),
@@ -132,6 +159,7 @@ public fun create_book(
   description: String,
   blob_id: String,
   size: u64,
+  content_type: String,
   ctx: &mut TxContext,
 ) {
   // 更新book_server数据
@@ -150,6 +178,7 @@ public fun create_book(
     blob_id,
     creator: tx_context::sender(ctx),
     size,
+    content_type,
   };
 
   transfer::transfer(book, tx_context::sender(ctx));
@@ -160,5 +189,45 @@ public fun create_book(
     blob_id,
     creator: tx_context::sender(ctx),
     size,
+    content_type,
+  })
+}
+
+// 没有创作者nft的捐赠
+public fun donate_server(
+  book_server: &mut BookServer,
+  donate_coin: Coin<SUI>,
+  clock: &Clock,
+  ctx: &mut TxContext,
+) {
+  let donate_value = coin::value(&donate_coin);
+  let donate_balance = coin::into_balance(donate_coin);
+  balance::join(&mut book_server.pool, donate_balance);
+  let mut book_creator_nft = get_book_creator_nft(book_server, ctx);
+  book_creator_nft.donate_amount = donate_value;
+  send_book_creator_nft(book_server, book_creator_nft, ctx);
+  event::emit(DonateServerEvent {
+    amount: donate_value,
+    address: tx_context::sender(ctx),
+    timestamp: timestamp_ms(clock),
+  })
+}
+
+// 有创作者nft的捐赠
+public fun donate_server_with_creator_nft(
+  book_server: &mut BookServer,
+  book_creator_nft: &mut BookCreatorNft,
+  donate_coin: Coin<SUI>,
+  clock: &Clock,
+  ctx: &mut TxContext,
+) {
+  let donate_value = coin::value(&donate_coin);
+  let donate_balance = coin::into_balance(donate_coin);
+  balance::join(&mut book_server.pool, donate_balance);
+  book_creator_nft.donate_amount = book_creator_nft.donate_amount + donate_value;
+  event::emit(DonateServerEvent {
+    amount: donate_value,
+    address: tx_context::sender(ctx),
+    timestamp: timestamp_ms(clock),
   })
 }

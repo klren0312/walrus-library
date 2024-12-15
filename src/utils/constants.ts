@@ -10,6 +10,8 @@ export const WALRUS_LIBRARY_SERVER_DEVNET = '0xcfe0c8ee496597b05a96119be5bbccebe
 export const WALRUS_PUBLISHER_TESTNET = 'http://127.0.0.1:31415/v1/store?epochs=200'
 // export const WALRUS_PUBLISHER_TESTNET = 'https://publisher.walrus-testnet.walrus.space/v1/store?epochs=200'
 
+export const SUI_GRAPHQL_URL = 'https://sui-devnet.mystenlabs.com/graphql'
+
 export const WALRUS_PUBLISHER = [
   'https://publisher.walrus-testnet.walrus.space/v1/store?epochs=200',
   'https://wal-publisher-testnet.staketab.org/v1/store?epochs=200',

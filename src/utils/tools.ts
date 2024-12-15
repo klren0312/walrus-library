@@ -1,57 +1,57 @@
-import dayjs from 'dayjs'
+import { WALRUS_AGGREGATOR } from './constants'
 
 /**
- * 返回范围内的随机数
- * @param min 最小值
- * @param max 最大值
- * @returns 随机数
+ * 获取 blob 的 url
+ * @param blobId blobId
+ * @returns blob 的 url
  */
-export const getRandomInt = (min: number, max: number) => {
-  const range = max - min + 1
-  const array = new Uint32Array(1)
-  window.crypto.getRandomValues(array)
-  return min + (array[0] % range)
+export const getBlobUrl = (blobId: string) => {
+  return `${WALRUS_AGGREGATOR[0]}${blobId}`
 }
 
 /**
- * 判断活动是否正在进行中
- * @param startStr 开始时间
- * @param endStr 结束时间
- * @returns 进行状态
+ * 计算大小
+ * @param size 大小为byte
+ * @returns 大小
  */
-export const isActivityInProgress = (startStr: string, endStr: string) => {
-  const now = dayjs()
-  const startDate = dayjs(startStr)
-  const endDate = dayjs(endStr)
-  if (startDate.isAfter(now)) {
-    return '未开始'
+export const calculateSize = (size: string) => {
+  const sizeNumber = Number(size)
+  if (isNaN(sizeNumber)) {
+    return '0B'
   }
-  if (now.isAfter(startDate) && now.isBefore(endDate)) {
-    return '进行中'
+  if (sizeNumber < 1024) {
+    return `${sizeNumber}B`
+  } else if (sizeNumber < 1024 * 1024) {
+    return `${(sizeNumber / 1024).toFixed(2)}KB`
+  } else if (sizeNumber < 1024 * 1024 * 1024) {
+    return `${(sizeNumber / 1024 / 1024).toFixed(2)}MB`
+  } else {
+    return `${(sizeNumber / 1024 / 1024 / 1024).toFixed(2)}GB`
   }
-  return '已结束'
 }
 
 /**
- * 复制文本
- * @param text 文本
+ * 下载文件
+ * @param blobId blobId
  */
-export const copyText = (text: string) => {
-  navigator.clipboard.writeText(text)
-}
-
-/**
- * 解析location.search为对象
- */
-export const parseSearch = () => {
-  const search = window.location.search
-  const searchObj: Record<string, string> = {}
-  if (search) {
-    search.substring(1).split('&').forEach((item) => {
-     const [key, value] = item.split('=')
-      searchObj[key] = value
+export const downloadFile = (blobId: string, title: string, type: string) => {
+  const link = document.createElement('a')
+  link.style.display = 'none'
+  // 创建 Blob 对象
+  return fetch(`${WALRUS_AGGREGATOR[0]}${blobId}`)
+    .then(response => response.blob())
+    .then(blob => {
+      const url = URL.createObjectURL(blob)
+      // 设置下载地址
+      link.setAttribute('href', url)
+      // 设置文件名
+      link.setAttribute('download', `${title}.${type.split('/')[1]}`)
+      link.setAttribute('target', '_blank')
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      // 释放 URL 对象
+      URL.revokeObjectURL(url)
     })
-    return searchObj
-  }
-  return null
+    .catch(error => console.error('下载文件失败:', error))
 }

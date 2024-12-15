@@ -12,6 +12,7 @@ import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
 import HomePage from './pages/HomePage'
 import UploadPage from './pages/UploadPage'
+import BookDetail from './pages/BookDetail'
 
 const queryClient = new QueryClient()
 export default function Main() {
@@ -42,6 +43,7 @@ export default function Main() {
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/upload" element={<UploadPage />} />
+                <Route path="/book/:id" element={<BookDetail />} />
               </Routes>
             </WalletProvider>
           </SuiClientProvider>

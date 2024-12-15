@@ -1,8 +1,18 @@
 {
+  "connect": {
+    "connect": "Connect Wallet"
+  },
+  "mint": {
+    "mintCreatorNft": "Mint Creator NFT",
+    "mintCreatorNftSuccess": "Mint Creator NFT Success"
+  },
   "home": {
     "title": "Walrus Library",
     "subtitle": "A place for you to read and share",
-    "upload": "Share your books!"
+    "upload": "Share your books!",
+    "mintCreatorNft": "Mint Creator NFT",
+    "goToUpload": "Go to Upload",
+    "footer": "Copyright © 2024 Walrus Library. All rights reserved. Powered by Walrus"
   },
   "upload": {
     "uploadTip": "Click or drag Cover Image to this area to upload",
@@ -14,5 +24,9 @@
     "submitBtn": "Submit",
     "successTip": "Share successfully, thank you for your sharing",
     "connectBtn": "Connect Wallet"
+  },
+  "bookDetail": {
+    "download": "Download",
+    "toSuiScan": "To SuiScan"
   }
 }

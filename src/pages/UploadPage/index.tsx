@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { Transaction } from '@mysten/sui/transactions'
 import { ConnectButton, useCurrentAccount, useSignAndExecuteTransaction } from '@mysten/dapp-kit'
 import { useNetworkVariable } from '/@/utils/networkConfig'
+import { useGetCreator } from '/@/hooks/useGetCreator'
 
 const { Dragger } = Upload
 const { TextArea } = Input
@@ -21,6 +22,7 @@ interface FormValues {
 }
 
 export default function UploadPage() {
+  const creator = useGetCreator()
   const [messageApi, contextHolder] = message.useMessage()
   const { mutate } = useSignAndExecuteTransaction()
   const packageId = useNetworkVariable('packageId')
@@ -61,6 +63,7 @@ export default function UploadPage() {
   const customUploadFile = async (options: any) => {
     const { file, onSuccess, onError, onProgress } = options
     const res = await UploadImageApi(file)
+    console.log(file.type)
     if (res) {
       onProgress(100)
       let blobId = ''
@@ -81,14 +84,15 @@ export default function UploadPage() {
    * @param value 表单数据
    */
   const handleSubmit = (value: FormValues) => {
-    console.log(value)
+    if (!creator) {
+      return
+    }
     const txb = new Transaction()
-    console.log(txb, packageId, server)
     txb.moveCall({
       target: `${packageId}::walrus_library::create_book`,
       arguments: [
         txb.object(server),
-        // 差一个
+        txb.object(creator.id),
         txb.pure.string(value.coverUrl),
         txb.pure.string(value.title),
         txb.pure.string(value.author),
@@ -108,6 +112,7 @@ export default function UploadPage() {
         },
         onSuccess: () => {
           form.resetFields()
+          setImageUrl('')
           messageApi.success(t('upload.successTip'))
         },
       }

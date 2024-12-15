@@ -1,8 +1,17 @@
 {
+  "connect": {
+    "connect": "连接钱包"
+  },
+  "mint": {
+    "mintCreatorNft": "铸造创作者 NFT",
+    "mintCreatorNftSuccess": "铸造创作者 NFT 成功"
+  },
   "home": {
     "title": "Walrus 图书馆",
     "subtitle": "一个让你阅读和分享的地方",
-    "upload": "分享你的书籍吧！"
+    "upload": "分享你的书籍吧！",
+    "goToUpload": "去上传",
+    "footer": "版权所有 © 2024 Walrus 图书馆。保留所有权利。由 Walrus 提供支持"
   },
   "upload": {
     "uploadTip": "点击或拖动封面图片到此区域上传",
@@ -14,5 +23,9 @@
     "submitBtn": "提交",
     "successTip": "分享成功，感谢您的分享",
     "connectBtn": "连接钱包"
+  },
+  "bookDetail": {
+    "download": "下载",
+    "toSuiScan": "前往SuiScan查看"
   }
 }
