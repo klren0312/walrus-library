@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { GetBooksApi } from '/@/apis/graphql.api'
+import { GetBooksApi } from '/@/apis/book.api'
 import { useNetworkVariable } from '/@/utils/networkConfig'
 import { BookData, useBooksStore } from '/@/stores/books'
 export const useGetBooks = () => {
@@ -13,7 +13,11 @@ export const useGetBooks = () => {
     }
   }
   useEffect(() => {
-    getBooks()
+    const intervalId = setInterval(() => {
+      getBooks()
+    }, 10000)
+    
+    return () => clearInterval(intervalId)
   }, [packageId])
   return books
 }

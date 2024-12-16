@@ -8,6 +8,7 @@ export interface BookData {
   blob_id: string;
   creator: string;
   size: string;
+  content_type: string;
 }
 export const useBooksStore = create<{
   books: BookData[]

@@ -8,17 +8,19 @@ import { Transaction } from '@mysten/sui/transactions'
 import { ConnectButton, useCurrentAccount, useSignAndExecuteTransaction } from '@mysten/dapp-kit'
 import { useNetworkVariable } from '/@/utils/networkConfig'
 import { useGetCreator } from '/@/hooks/useGetCreator'
+import { GetBookIdApi, InsertBookToDatabase } from '/@/apis/book.api'
 
 const { Dragger } = Upload
 const { TextArea } = Input
 
 interface FormValues {
-  coverUrl: string;
-  title: string;
-  author: string;
-  description: string;
-  file: string;
-  fileSize: number;
+  coverUrl: string
+  title: string
+  author: string
+  description: string
+  file: string
+  fileSize: number
+  fileType: string
 }
 
 export default function UploadPage() {
@@ -33,7 +35,6 @@ export default function UploadPage() {
   const [imageUrl, setImageUrl] = useState('')
 
   const account = useCurrentAccount()
-  console.log(account)
   /**
    * 自定义上传逻辑
    */
@@ -75,6 +76,7 @@ export default function UploadPage() {
       onSuccess([file])
       form.setFieldValue('file', blobId)
       form.setFieldValue('fileSize', file.size)
+      form.setFieldValue('fileType', file.type)
     } else {
       onError('上传失败')
     }
@@ -98,7 +100,8 @@ export default function UploadPage() {
         txb.pure.string(value.author),
         txb.pure.string(value.description),
         txb.pure.string(value.file),
-        txb.pure.u64(value.fileSize)
+        txb.pure.u64(value.fileSize),
+        txb.pure.string(value.fileType)
       ]
     })
     mutate(
@@ -110,10 +113,22 @@ export default function UploadPage() {
           console.log(err.message)
           messageApi.error(err.message)
         },
-        onSuccess: () => {
+        onSuccess: async (result) => {
           form.resetFields()
           setImageUrl('')
           messageApi.success(t('upload.successTip'))
+          const bookId = await GetBookIdApi(result.digest)
+          if (bookId) {
+            InsertBookToDatabase(account?.address || '', {
+              book_id: bookId,
+              title: value.title,
+              author: value.author,
+              description: value.description,
+              blob_id: value.file,
+              creator: account?.address || '',
+              cover_blob_id: value.coverUrl
+            })
+          }
         },
       }
     )
@@ -177,6 +192,10 @@ export default function UploadPage() {
                 </Form.Item>
                 {/* 文件大小 自动填入 隐藏显示 */}
                 <Form.Item className="w-full" label={t('upload.fileSize')} name="fileSize" hidden>
+                  <Input />
+                </Form.Item>
+                {/* 文件类型 自动填入 隐藏显示 */}
+                <Form.Item className="w-full" label={t('upload.fileType')} name="fileType" hidden>
                   <Input />
                 </Form.Item>
               </Flex>

@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { GetCreatorNftApi } from '../apis/graphql.api'
+import { GetCreatorNftApi } from '../apis/common.api'
 import { useNetworkVariable } from '../utils/networkConfig'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { CreatorNft, useCreatorStore } from '../stores/creator'

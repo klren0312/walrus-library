@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { Transaction } from '@mysten/sui/transactions'
 import ConnectBtn from './ConnectBtn'
 
-export default function MintCreatorNftBtn() {
+export default function MintCreatorNftBtn({onMintSuccess}: {onMintSuccess: () => void}) {
   const [messageApi, contextHolder] = message.useMessage()
   const { mutate } = useSignAndExecuteTransaction()
   const packageId = useNetworkVariable('packageId')
@@ -27,6 +27,7 @@ export default function MintCreatorNftBtn() {
       {
         onSuccess: () => {
           messageApi.success(t('mint.mintCreatorNftSuccess'))
+          onMintSuccess()
         },
         onError: (err) => {
           console.log(err.message)

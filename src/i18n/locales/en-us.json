@@ -27,6 +27,15 @@
   },
   "bookDetail": {
     "download": "Download",
-    "toSuiScan": "To SuiScan"
+    "toSuiScan": "To SuiScan",
+    "title": "Title",
+    "author": "Author",
+    "description": "Description",
+    "size": "Size",
+    "writeReview": "Write Review",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "submitSuccess": "Submit Success",
+    "submitError": "Submit Error"
   }
 }

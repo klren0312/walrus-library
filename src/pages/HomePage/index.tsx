@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import './style.less'
 import MintCreatorNftBtn from '/@/components/MintCreatorNftBtn'
-import { GetCreatorNftApi } from '/@/apis/graphql.api'
+import { GetCreatorNftApi } from '/@/apis/common.api'
 import { useNetworkVariable } from '/@/utils/networkConfig'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { useEffect, useState } from 'react'
@@ -85,7 +85,9 @@ export default function HomePage() {
                   <div>{t('home.upload')}</div>
                   {
                     !creator ?
-                    <MintCreatorNftBtn /> :
+                    <MintCreatorNftBtn onMintSuccess={() => {
+                      setTimeout(() => getCreator(), 5000)
+                    }} /> :
                     <div
                       onClick={() => window.open('/upload', '_blank')}
                       className="inline-block cursor-pointer text-xl text-black border-4 border-[#98efe4] rounded-md px-4 py-2"

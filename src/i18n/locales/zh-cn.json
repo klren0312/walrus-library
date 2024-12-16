@@ -26,6 +26,15 @@
   },
   "bookDetail": {
     "download": "下载",
-    "toSuiScan": "前往SuiScan查看"
+    "toSuiScan": "前往SuiScan查看",
+    "title": "书名",
+    "author": "作者",
+    "description": "描述",
+    "size": "大小",
+    "writeReview": "写书评",
+    "cancel": "取消",
+    "submit": "提交",
+    "submitSuccess": "提交成功",
+    "submitError": "提交失败"
   }
 }

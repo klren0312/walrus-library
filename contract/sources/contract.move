@@ -7,6 +7,8 @@ use sui::balance::{Self,Balance};
 use sui::coin::{Self, Coin};
 use sui::sui::SUI;
 use sui::clock::{timestamp_ms, Clock};
+use sui::table::{Self, Table};
+
 public struct WALRUS_LIBRARY has drop {}
 
 public struct BookServer has key, store {
@@ -27,9 +29,18 @@ public struct Book has key, store {
   creator: address,
   size: u64,
   content_type: String,
+  book_review: Table<address, BookReview>,
 }
 
-public struct BookCreatorNft has key, store {
+public struct BookReview has key, store {
+  id: UID,
+  book_id: ID,
+  author: address,
+  content_blob_id: String,
+  timestamp: u64,
+}
+
+public struct BookCreatorNft has key {
   id: UID,
   name: String,
   image_url: String,
@@ -50,6 +61,7 @@ public struct CreateBookCreatorNftEvent has copy, drop {
 
 // create book event
 public struct CreateBookEvent has copy, drop {
+  book_id: ID,
   title: String,
   author: String,
   description: String,
@@ -57,6 +69,14 @@ public struct CreateBookEvent has copy, drop {
   creator: address,
   size: u64,
   content_type: String,
+}
+
+// 创建书评事件
+public struct CreateBookReviewEvent has copy,drop {
+  book_id: ID,
+  author: address,
+  content_blob_id: String,
+  timestamp: u64,
 }
 
 // donate server event
@@ -112,7 +132,7 @@ fun init (otw: WALRUS_LIBRARY, ctx: &mut TxContext) {
   transfer::public_transfer(display, tx_context::sender(ctx));
 }
 
-// mint BookCreatorNft
+// 创建 BookCreatorNft 对象
 fun get_book_creator_nft(
   book_server: &mut BookServer,
   ctx: &mut TxContext,
@@ -130,14 +150,22 @@ fun get_book_creator_nft(
   book_creator_nft
 }
 
-// 发送creator nft
-#[allow(lint(self_transfer))]
-public fun send_book_creator_nft(
+// 铸造creator nft
+public fun mint_book_creator_nft(
   book_server: &mut BookServer,
-  book_creator_nft: BookCreatorNft,
   ctx: &mut TxContext,
 ) {
-  transfer::public_transfer(book_creator_nft, tx_context::sender(ctx));
+  let nft = get_book_creator_nft(book_server, ctx);
+  send_book_creator_nft(book_server, nft, ctx);
+}
+
+// 发送creator nft
+fun send_book_creator_nft(
+  book_server: &BookServer,
+  book_creator_nft: BookCreatorNft,
+  ctx: &TxContext,
+) {
+  transfer::transfer(book_creator_nft, tx_context::sender(ctx));
 
   event::emit(CreateBookCreatorNftEvent {
     name: utf8(b"Walrus Library Creator NFT"),
@@ -179,10 +207,11 @@ public fun create_book(
     creator: tx_context::sender(ctx),
     size,
     content_type,
+    book_review: table::new(ctx),
   };
 
-  transfer::transfer(book, tx_context::sender(ctx));
   event::emit(CreateBookEvent {
+    book_id: object::uid_to_inner(&book.id),
     title,
     author,
     description,
@@ -190,7 +219,36 @@ public fun create_book(
     creator: tx_context::sender(ctx),
     size,
     content_type,
-  })
+  });
+  transfer::transfer(book, tx_context::sender(ctx));
+}
+
+// 创建书评
+public fun create_book_review(
+  book: &mut Book,
+  author: address,
+  content_blob_id: String,
+  clock: &Clock,
+  ctx: &mut TxContext
+) {
+  let timestamp = timestamp_ms(clock);
+  let id = object::new(ctx);
+  let book_id = object::uid_to_inner(&book.id);
+  let book_review = BookReview {
+    id,
+    book_id,
+    author,
+    content_blob_id,
+    timestamp,
+  };
+  event::emit(CreateBookReviewEvent {
+    book_id,
+    author,
+    content_blob_id,
+    timestamp,
+  });
+  // 添加到book对象里
+  table::add(&mut book.book_review, tx_context::sender(ctx), book_review);
 }
 
 // 没有创作者nft的捐赠

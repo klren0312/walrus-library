@@ -1,16 +1,19 @@
 export const MAINNET_PACKAGE_ID = '0x0'
 export const TESTNET_PACKAGE_ID = '0x0'
-export const DEVNET_PACKAGE_ID = '0x5858d66ee5890ca0ceb4767d52499bac0660336c94bd5807697cad833ce08754'
+export const DEVNET_PACKAGE_ID = '0x787c956f76ba461c88f0e972e7bd5308c2da64eb4004d223127933cb310e7564'
 
 export const MAINNET_HAI_SERVER = '0x0'
 export const WALRUS_LIBRARY_SERVER_TESTNET = '0x0'
-export const WALRUS_LIBRARY_SERVER_DEVNET = '0xcfe0c8ee496597b05a96119be5bbccebe0bf6ca8e1f3633a10d34501a00f5465'
+export const WALRUS_LIBRARY_SERVER_DEVNET = '0x6debcf8da8cf8d0969b089d57faa3271fff263b17c7a66c9641804150b8b5097'
 
 // export const WALRUS_PUBLISHER_TESTNET = 'https://publisher-walrus.zzes1314.cn/v1/store?epochs=200'
 export const WALRUS_PUBLISHER_TESTNET = 'http://127.0.0.1:31415/v1/store?epochs=200'
 // export const WALRUS_PUBLISHER_TESTNET = 'https://publisher.walrus-testnet.walrus.space/v1/store?epochs=200'
 
 export const SUI_GRAPHQL_URL = 'https://sui-devnet.mystenlabs.com/graphql'
+
+export const SUPABASE_URL = 'https://ecnrrunjqgqplldtqmwy.supabase.co'
+export const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjbnJydW5qcWdxcGxsZHRxbXd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI1NDEzMzcsImV4cCI6MjA0ODExNzMzN30.vQ81tt92e8YW-8cq9bLlFrISWnRPihM-8Cm660cIALU'
 
 export const WALRUS_PUBLISHER = [
   'https://publisher.walrus-testnet.walrus.space/v1/store?epochs=200',
