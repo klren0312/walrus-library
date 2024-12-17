@@ -71,6 +71,13 @@ export async function UploadTextApi (text: string): Promise<UploadWalrusResponse
     method: 'PUT',
     url: WALRUS_PUBLISHER_TESTNET,
     data: text,
+  }).then(res => {
+    if (res.status === 200) {
+      return res.data
+    } else {
+      console.error(res)
+      return null
+    }
   })
 }
 

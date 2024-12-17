@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { pdfjs, Document, Page } from 'react-pdf'
 import { ReactReader } from 'react-reader'
 import { calculateSize, downloadFile, getBlobUrl } from '/@/utils/tools'
@@ -10,6 +10,8 @@ import { GetBookDetailApi } from '/@/apis/book.api'
 import { BookData } from '/@/stores/books'
 import { useTranslation } from 'react-i18next'
 import WriteReview from '/@/components/WriteReview'
+import BookReviewList from '/@/components/BookReviewList'
+import { RollbackOutlined } from '@ant-design/icons'
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   '/pdf.worker.min.mjs',
@@ -25,6 +27,7 @@ export default function BookDetail() {
   const [bookType, setBookType] = useState<string>('')
   const [writeReviewOpen, setWriteReviewOpen] = useState<boolean>(false)
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages)
   }
@@ -32,6 +35,10 @@ export default function BookDetail() {
     setPageNumber(page)
   }
 
+  /**
+   * 获取书籍详情
+   * @param id 书籍 ID
+   */
   const getBookDetail = async (id: string) => {
     setLoading(true)
     const res = await GetBookDetailApi(id)
@@ -39,9 +46,9 @@ export default function BookDetail() {
       setBookData(res)
       setBookType(res.content_type)
     }
-    console.log(res)
     setLoading(false)
   }
+
   const doDownload = async () => {
     setDownloadLoading(true)
     await downloadFile(bookData?.blob_id || '', bookData?.title || '', 'application/pdf')
@@ -60,7 +67,11 @@ export default function BookDetail() {
           {
             loading ?
             <Spin /> :
-            <div className="w-full min-h-[80%] p-5 flex gap-5 border border-black rounded-lg">
+            <div className="relative w-full min-h-[80%] p-5 flex gap-5 border border-black rounded-lg">
+              <div onClick={() => navigate('/')} className="absolute right-0 top-0 flex items-center cursor-pointer">
+                <RollbackOutlined  />
+                <span className="ml-2">{t('bookDetail.goBack')}</span>
+              </div>
               <div className="w-1/2 flex flex-col items-center justify-center">
               {
                 bookType.includes('pdf') ?
@@ -114,12 +125,24 @@ export default function BookDetail() {
                     {t('bookDetail.writeReview')}
                   </div>
                 </div>
+                <BookReviewList bookReview={bookData?.book_review} />
               </div>
             </div>
           }
         </div>
       </div>
-      <WriteReview bookId={bookData?.id || ''} writeReviewOpen={writeReviewOpen} setWriteReviewOpen={setWriteReviewOpen} />
+      <WriteReview
+        bookId={bookData?.id || ''}
+        writeReviewOpen={writeReviewOpen}
+        setWriteReviewOpen={setWriteReviewOpen}
+        submitSuccess={
+          () => {
+            setTimeout(() => {
+              id && getBookDetail(id)
+            }, 5000)
+          }
+        }
+      />
     </section>
   )
 }

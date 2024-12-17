@@ -4,12 +4,16 @@ use sui::event::{Self};
 use sui::package::{claim};
 use sui::display::{new_with_fields, update_version};
 use sui::balance::{Self,Balance};
-use sui::coin::{Self, Coin};
+use sui::coin::{Self, Coin, from_balance};
 use sui::sui::SUI;
 use sui::clock::{timestamp_ms, Clock};
 use sui::table::{Self, Table};
 
 public struct WALRUS_LIBRARY has drop {}
+
+public struct AdminCap has key {
+  id: UID
+}
 
 public struct BookServer has key, store {
   id: UID,
@@ -29,12 +33,14 @@ public struct Book has key, store {
   creator: address,
   size: u64,
   content_type: String,
-  book_review: Table<address, BookReview>,
+  book_review: Table<String, BookReview>,
 }
 
 public struct BookReview has key, store {
   id: UID,
   book_id: ID,
+  book_title: String,
+  book_cover_blob_id: String,
   author: address,
   content_blob_id: String,
   timestamp: u64,
@@ -75,6 +81,8 @@ public struct CreateBookEvent has copy, drop {
 public struct CreateBookReviewEvent has copy,drop {
   book_id: ID,
   author: address,
+  book_title: String,
+  book_cover_blob_id: String,
   content_blob_id: String,
   timestamp: u64,
 }
@@ -97,6 +105,10 @@ fun init (otw: WALRUS_LIBRARY, ctx: &mut TxContext) {
     pool: balance::zero(),
   };
   transfer::share_object(book_server);
+
+  // 创建AdminCap对象
+  let admin_cap = AdminCap { id: object::new(ctx) };
+  transfer::transfer(admin_cap, tx_context::sender(ctx));
 
   // 创建BookCreatorNft display
   let keys = vector[
@@ -237,6 +249,8 @@ public fun create_book_review(
   let book_review = BookReview {
     id,
     book_id,
+    book_title: book.title,
+    book_cover_blob_id: book.cover_blob_id,
     author,
     content_blob_id,
     timestamp,
@@ -244,11 +258,16 @@ public fun create_book_review(
   event::emit(CreateBookReviewEvent {
     book_id,
     author,
+    book_title: book.title,
+    book_cover_blob_id: book.cover_blob_id,
     content_blob_id,
     timestamp,
   });
+  let mut author_str = tx_context::sender(ctx).to_string();
+  author_str.append(timestamp.to_string());
+
   // 添加到book对象里
-  table::add(&mut book.book_review, tx_context::sender(ctx), book_review);
+  table::add(&mut book.book_review, author_str, book_review);
 }
 
 // 没有创作者nft的捐赠
@@ -288,4 +307,18 @@ public fun donate_server_with_creator_nft(
     address: tx_context::sender(ctx),
     timestamp: timestamp_ms(clock),
   })
+}
+
+// 捐赠提取
+entry fun withdraw_donate (
+  _: &AdminCap,
+  book_server: &mut BookServer,
+  ctx: &mut TxContext,
+) {
+  let withdraw_value = balance::value(&book_server.pool);
+  // 分割手续费余额
+  let withdraw_balance = balance::split(&mut book_server.pool, withdraw_value);
+
+  let withdraw_coin = from_balance(withdraw_balance, ctx);
+  transfer::public_transfer(withdraw_coin, tx_context::sender(ctx));
 }

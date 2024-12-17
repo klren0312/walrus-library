@@ -1,10 +1,10 @@
 export const MAINNET_PACKAGE_ID = '0x0'
 export const TESTNET_PACKAGE_ID = '0x0'
-export const DEVNET_PACKAGE_ID = '0x787c956f76ba461c88f0e972e7bd5308c2da64eb4004d223127933cb310e7564'
+export const DEVNET_PACKAGE_ID = '0x947ebabdc051badafb66b00f85f1ec956261f3b9f66094f86ecd81a40834031f'
 
 export const MAINNET_HAI_SERVER = '0x0'
 export const WALRUS_LIBRARY_SERVER_TESTNET = '0x0'
-export const WALRUS_LIBRARY_SERVER_DEVNET = '0x6debcf8da8cf8d0969b089d57faa3271fff263b17c7a66c9641804150b8b5097'
+export const WALRUS_LIBRARY_SERVER_DEVNET = '0xc09769c2fe3bf9379a65cb8e4e20aed5fd01168b36bb5b570b2c68b40acc14a4'
 
 // export const WALRUS_PUBLISHER_TESTNET = 'https://publisher-walrus.zzes1314.cn/v1/store?epochs=200'
 export const WALRUS_PUBLISHER_TESTNET = 'http://127.0.0.1:31415/v1/store?epochs=200'

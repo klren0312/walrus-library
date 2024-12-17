@@ -13,11 +13,12 @@ interface Props {
   bookId: string
   writeReviewOpen: boolean
   setWriteReviewOpen: (open: boolean) => void
+  submitSuccess: () => void
 }
-export default function WriteReview({ bookId, writeReviewOpen, setWriteReviewOpen }: Props) {
+export default function WriteReview({ bookId, writeReviewOpen, setWriteReviewOpen, submitSuccess }: Props) {
   const [messageApi, contextHolder] = message.useMessage()
   const { t } = useTranslation()
-  const [text, setText] = useState('# Hello Editor')
+  const [text, setText] = useState('')
   const account = useCurrentAccount()
   const { mutate } = useSignAndExecuteTransaction()
   const packageId = useNetworkVariable('packageId')
@@ -29,7 +30,6 @@ export default function WriteReview({ bookId, writeReviewOpen, setWriteReviewOpe
    * @param callBack 回调函数
    */
   const onUploadImg = async (files: Array<File>, callBack: UploadImgCallBack) => {
-    console.log(files)
     const urls: string[] = []
     for (const file of files) {
       const res = await UploadImageApi(file)
@@ -51,7 +51,6 @@ export default function WriteReview({ bookId, writeReviewOpen, setWriteReviewOpe
    * 提交书评
    */
   const submitReview = async () => {
-    console.log(text, bookId)
     setSubmitLoading(true)
     const txb = new Transaction()
     const res = await UploadTextApi(text)
@@ -62,7 +61,6 @@ export default function WriteReview({ bookId, writeReviewOpen, setWriteReviewOpe
       } else if (res.newlyCreated) {
         blobId = res.newlyCreated.blobObject.blobId
       }
-      console.log(blobId)
       txb.moveCall({
         target: `${packageId}::walrus_library::create_book_review`,
         arguments: [
@@ -81,6 +79,7 @@ export default function WriteReview({ bookId, writeReviewOpen, setWriteReviewOpe
             messageApi.success(t('bookDetail.submitSuccess'))
             setSubmitLoading(false)
             setWriteReviewOpen(false)
+            submitSuccess()
           },
           onError: () => {
             messageApi.error(t('bookDetail.submitError'))
@@ -96,7 +95,6 @@ export default function WriteReview({ bookId, writeReviewOpen, setWriteReviewOpe
       open={writeReviewOpen}
       title={t('bookDetail.writeReview')}
       footer={() => <div className="flex justify-end">
-        <Button onClick={() => setWriteReviewOpen(false)}>{t('bookDetail.cancel')}</Button>
         <Button loading={submitLoading} onClick={submitReview}>{t('bookDetail.submit')}</Button>
       </div>}
     >

@@ -3,7 +3,7 @@ import { BookData } from '../stores/books'
 import { SuiGraphQLClient } from '@mysten/sui/graphql'
 import { graphql } from '@mysten/sui/graphql/schemas/2024.4'
 import { SUI_GRAPHQL_URL } from '../utils/constants'
-import { BookCreateEvent, InsertBookData } from './types/book.type'
+import { BookCreateEvent, BookReviewData, InsertBookData } from './types/book.type'
 
 const gqlClient = new SuiGraphQLClient({
 	url: SUI_GRAPHQL_URL,
@@ -94,6 +94,67 @@ export async function GetBookIdApi (digest: string) {
     return content.json.book_id
   }
   return null
+}
+
+// 获取指定书籍评论
+export async function GetBookReviewApi (tableId: string, endCursor: string | null = null): Promise<BookReviewData | null> {
+  const query = graphql(`
+    query($endCursor: String) {
+      owner(address: "${tableId}") {
+        dynamicFields(
+          first: 10
+          after: $endCursor
+        ) {
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+          nodes {
+            name {
+              json
+            }
+            value {
+              ... on MoveValue {
+                json
+              }
+            }
+          }
+        }
+      }
+    }
+  `)
+  const result = await gqlClient.query({
+    query,
+    variables: { endCursor },
+  })
+  return {
+    nodes: result.data?.owner?.dynamicFields?.nodes,
+    pageInfo: result.data?.owner?.dynamicFields?.pageInfo,
+  } as BookReviewData
+}
+
+// 获取最新的书评（不指定书籍）
+export async function GetLatestBookReviewApi (packageId: string) {
+  const query = graphql(`
+    query {
+      events(
+        last: 10
+        filter: {
+          eventType: "${packageId}::walrus_library::CreateBookReviewEvent"
+        }
+      ) {
+        nodes {
+          contents {
+            json
+          }
+        }
+      }
+    }
+  `)
+  const result = await gqlClient.query({
+    query,
+  })
+  return result.data?.events?.nodes
 }
 
 // 录入数据库

@@ -151,11 +151,11 @@ export default function UploadPage() {
               <Form.Item name="coverUrl">
                 <Dragger
                   className="inline-block w-[18.75rem] h-[25rem]"
-                  accept="image/*"
                   maxCount={1}
                   multiple={false}
                   customRequest={customUploadCover}
                   showUploadList={false}
+                  accept="image/png, image/jpeg, image/jpg"
                 >
                   {uploading ? (
                     <p className="ant-upload-drag-icon">加载中...</p>
@@ -186,7 +186,7 @@ export default function UploadPage() {
                   label={t('upload.file')}
                   name="file"
                 >
-                  <Upload customRequest={customUploadFile} multiple={false} maxCount={1}>
+                  <Upload customRequest={customUploadFile} multiple={false} maxCount={1} accept="application/pdf, application/epub+zip">
                     <Button icon={<UploadOutlined />}>{t('upload.uploadBtn')}</Button>
                   </Upload>
                 </Form.Item>

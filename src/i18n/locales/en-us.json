@@ -12,7 +12,11 @@
     "upload": "Share your books!",
     "mintCreatorNft": "Mint Creator NFT",
     "goToUpload": "Go to Upload",
-    "footer": "Copyright © 2024 Walrus Library. All rights reserved. Powered by Walrus"
+    "footer": "Copyright © 2024 Walrus Library. All rights reserved. Powered by Walrus",
+    "review": "Latest Book Reviews",
+    "donate": "Donate 1 SUI to support us",
+    "donateSuccess": "Donate Success, Thank you for your support!",
+    "donateError": "Donate Error, Please try again"
   },
   "upload": {
     "uploadTip": "Click or drag Cover Image to this area to upload",
@@ -36,6 +40,9 @@
     "cancel": "Cancel",
     "submit": "Submit",
     "submitSuccess": "Submit Success",
-    "submitError": "Submit Error"
+    "submitError": "Submit Error",
+    "reviewTitle": "Review",
+    "toBook": "To Book",
+    "goBack": "Go Back"
   }
 }

@@ -11,7 +11,11 @@
     "subtitle": "一个让你阅读和分享的地方",
     "upload": "分享你的书籍吧！",
     "goToUpload": "去上传",
-    "footer": "版权所有 © 2024 Walrus 图书馆。保留所有权利。由 Walrus 提供支持"
+    "footer": "版权所有 © 2024 Walrus 图书馆。保留所有权利。由 Walrus 提供支持",
+    "review": "最新书评",
+    "donate": "捐赠 1 SUI 支持我们",
+    "donateSuccess": "捐赠成功，感谢您的支持！",
+    "donateError": "捐赠失败，请重试"
   },
   "upload": {
     "uploadTip": "点击或拖动封面图片到此区域上传",
@@ -35,6 +39,9 @@
     "cancel": "取消",
     "submit": "提交",
     "submitSuccess": "提交成功",
-    "submitError": "提交失败"
+    "submitError": "提交失败",
+    "reviewTitle": "书评",
+    "toBook": "前往看书",
+    "goBack": "返回首页"
   }
 }
