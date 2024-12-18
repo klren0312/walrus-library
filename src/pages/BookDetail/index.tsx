@@ -83,7 +83,7 @@ export default function BookDetail() {
                 </> :
                 <div className="w-full h-[43.75rem]">
                   <ReactReader
-                    url={getBlobUrl('4eCkjzqMZs4UxBb6TQU5pfeOG0AV-MCUECWys4Buhgo')}
+                    url={getBlobUrl(bookData?.blob_id || '')}
                     location={pageNumber}
                     epubOptions={{spread: 'none'}}
                     epubInitOptions={{
