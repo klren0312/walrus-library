@@ -68,7 +68,7 @@ export default function BookDetail() {
             loading ?
             <Spin /> :
             <div className="relative w-full min-h-[80%] p-5 flex gap-5 border border-black rounded-lg">
-              <div onClick={() => navigate('/')} className="absolute right-0 -top-6 flex items-center cursor-pointer">
+              <div onClick={() => navigate('/')} className="absolute right-0 flex items-center cursor-pointer" style={{top: '-1.5rem'}}>
                 <RollbackOutlined  />
                 <span className="ml-2">{t('bookDetail.goBack')}</span>
               </div>
