@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { UploadImageApi } from '/@/apis/common.api'
 import { useState } from 'react'
 import { Transaction } from '@mysten/sui/transactions'
-import { ConnectButton, useCurrentAccount, useSignAndExecuteTransaction } from '@mysten/dapp-kit'
+import { ConnectButton, useCurrentAccount, useSignAndExecuteTransaction, useSuiClient } from '@mysten/dapp-kit'
 import { useNetworkVariable } from '/@/utils/networkConfig'
 import { useGetCreator } from '/@/hooks/useGetCreator'
 import { GetBookIdApi, InsertBookToDatabase } from '/@/apis/book.api'
@@ -33,7 +33,8 @@ export default function UploadPage() {
   const [form] = Form.useForm()
   const [uploading, setUploading] = useState(false)
   const [imageUrl, setImageUrl] = useState('')
-
+  const [submitLoading, setSubmitLoading] = useState(false)
+  const client = useSuiClient()
   const account = useCurrentAccount()
   /**
    * 自定义上传逻辑
@@ -89,6 +90,7 @@ export default function UploadPage() {
     if (!creator) {
       return
     }
+    setSubmitLoading(true)
     const txb = new Transaction()
     txb.moveCall({
       target: `${packageId}::walrus_library::create_book`,
@@ -112,11 +114,14 @@ export default function UploadPage() {
         onError: (err) => {
           console.log(err.message)
           messageApi.error(err.message)
+          setSubmitLoading(false)
         },
         onSuccess: async (result) => {
+          await client.waitForTransaction({ digest: result.digest })
           form.resetFields()
           setImageUrl('')
           messageApi.success(t('upload.successTip'))
+          setSubmitLoading(false)
           const bookId = await GetBookIdApi(result.digest)
           if (bookId) {
             InsertBookToDatabase(account?.address || '', {
@@ -201,7 +206,7 @@ export default function UploadPage() {
                 </Form.Item>
               </Flex>
             </Flex>
-            <Button type="primary" className="w-2/3" onClick={() => form.submit()}>
+            <Button type="primary" className="w-2/3" onClick={() => form.submit()} loading={submitLoading}>
               {t('upload.submitBtn')}
             </Button>
           </Form>

@@ -1,4 +1,4 @@
-import { useCurrentAccount, useSignAndExecuteTransaction } from '@mysten/dapp-kit'
+import { useCurrentAccount, useSignAndExecuteTransaction, useSuiClient } from '@mysten/dapp-kit'
 import { message } from 'antd'
 import { useNetworkVariable } from '../utils/networkConfig'
 import { useTranslation } from 'react-i18next'
@@ -12,6 +12,7 @@ export default function MintCreatorNftBtn({onMintSuccess}: {onMintSuccess: () =>
   const server = useNetworkVariable('server')
   const { t } = useTranslation()
   const currentAccount = useCurrentAccount()
+  const client = useSuiClient()
   const doMint = () => {
     const txb = new Transaction()
     txb.moveCall({
@@ -25,7 +26,8 @@ export default function MintCreatorNftBtn({onMintSuccess}: {onMintSuccess: () =>
         transaction: txb
       },
       {
-        onSuccess: () => {
+        onSuccess: async (result) => {
+          await client.waitForTransaction({ digest: result.digest })
           messageApi.success(t('mint.mintCreatorNftSuccess'))
           onMintSuccess()
         },

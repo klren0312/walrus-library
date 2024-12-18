@@ -3,7 +3,7 @@ import './style.less'
 import MintCreatorNftBtn from '/@/components/MintCreatorNftBtn'
 import { GetCreatorNftApi } from '/@/apis/common.api'
 import { useNetworkVariable } from '/@/utils/networkConfig'
-import { useCurrentAccount, useSignAndExecuteTransaction } from '@mysten/dapp-kit'
+import { useCurrentAccount, useSignAndExecuteTransaction, useSuiClient } from '@mysten/dapp-kit'
 import { useEffect, useState } from 'react'
 import { CreatorNft, useCreatorStore } from '/@/stores/creator'
 import { useGetBooks } from '/@/hooks/useGetBooks'
@@ -35,6 +35,7 @@ export default function HomePage() {
   const [currentReview, setCurrentReview] = useState<BookReview | undefined>(undefined)
   const [openReview, setOpenReview] = useState(false)
   const { mutate } = useSignAndExecuteTransaction()
+  const client = useSuiClient()
 
   /**
    * 获取创作者nft
@@ -119,11 +120,10 @@ export default function HomePage() {
           console.log(err.message)
           messageApi.error(t('home.donateError'))
         },
-        onSuccess: () => {
+        onSuccess: async (result) => {
+          await client.waitForTransaction({ digest: result.digest })
           messageApi.success(t('home.donateSuccess'))
-          setTimeout(() => {
-            getCreator()
-          }, 5000)
+          getCreator()
         }
       }
     )
@@ -223,7 +223,8 @@ export default function HomePage() {
                   {
                     !creator ?
                     <MintCreatorNftBtn onMintSuccess={() => {
-                      setTimeout(() => getCreator(), 5000)
+                      // setTimeout(() => getCreator(), 5000)
+                      getCreator()
                     }} /> :
                     <div
                       onClick={() => window.open('/#/upload', '_blank')}
