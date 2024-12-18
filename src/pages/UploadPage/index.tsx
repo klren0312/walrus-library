@@ -148,7 +148,7 @@ export default function UploadPage() {
             onFinish={handleSubmit}
           >
             <Flex className="w-full" justify="center" align="center">
-              <Form.Item name="coverUrl">
+              <Form.Item rules={[{ required: true, message: t('upload.coverRequired') }]} name="coverUrl">
                 <Dragger
                   className="inline-block w-[18.75rem] h-[25rem]"
                   maxCount={1}
@@ -172,16 +172,17 @@ export default function UploadPage() {
                 </Dragger>
               </Form.Item>
               <Flex className="w-[25rem] p-8" vertical align="flex-start" justify="space-between">
-                <Form.Item className="w-full" label={t('upload.title')} name="title">
+                <Form.Item rules={[{ required: true, message: t('upload.titleRequired') }]} className="w-full" label={t('upload.title')} name="title">
                   <Input />
                 </Form.Item>
-                <Form.Item className="w-full" label={t('upload.author')} name="author">
+                <Form.Item rules={[{ required: true, message: t('upload.authorRequired') }]} className="w-full" label={t('upload.author')} name="author">
                   <Input />
                 </Form.Item>
-                <Form.Item className="w-full" label={t('upload.description')} name="description">
+                <Form.Item rules={[{ required: true, message: t('upload.descriptionRequired') }]} className="w-full" label={t('upload.description')} name="description">
                   <TextArea rows={4} />
                 </Form.Item>
                 <Form.Item
+                  rules={[{ required: true, message: t('upload.fileRequired') }]}
                   className="w-full"
                   label={t('upload.file')}
                   name="file"

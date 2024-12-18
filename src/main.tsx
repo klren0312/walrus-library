@@ -1,4 +1,4 @@
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
+import { Route, HashRouter as Router, Routes } from 'react-router-dom'
 import { ConfigProvider } from 'antd'
 import enUS from 'antd/es/locale/en_US'
 import zhCN from 'antd/es/locale/zh_CN'
@@ -33,7 +33,7 @@ export default function Main() {
         }}
       >
         <QueryClientProvider client={queryClient}>
-          <SuiClientProvider networks={networkConfig} defaultNetwork="devnet">
+          <SuiClientProvider networks={networkConfig} defaultNetwork="testnet">
             <WalletProvider
               autoConnect
               stashedWallet={{

@@ -13,6 +13,7 @@ export const useGetBooks = () => {
     }
   }
   useEffect(() => {
+    getBooks()
     const intervalId = setInterval(() => {
       getBooks()
     }, 10000)

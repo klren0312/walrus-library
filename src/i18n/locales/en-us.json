@@ -27,7 +27,12 @@
     "uploadBtn": "Upload",
     "submitBtn": "Submit",
     "successTip": "Share successfully, thank you for your sharing",
-    "connectBtn": "Connect Wallet"
+    "connectBtn": "Connect Wallet",
+    "coverRequired": "Cover Image is required",
+    "titleRequired": "Title is required",
+    "authorRequired": "Author is required",
+    "descriptionRequired": "Description is required",
+    "fileRequired": "File is required"
   },
   "bookDetail": {
     "download": "Download",

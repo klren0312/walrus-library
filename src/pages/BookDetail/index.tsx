@@ -68,7 +68,7 @@ export default function BookDetail() {
             loading ?
             <Spin /> :
             <div className="relative w-full min-h-[80%] p-5 flex gap-5 border border-black rounded-lg">
-              <div onClick={() => navigate('/')} className="absolute right-0 top-0 flex items-center cursor-pointer">
+              <div onClick={() => navigate('/')} className="absolute right-0 -top-6 flex items-center cursor-pointer">
                 <RollbackOutlined  />
                 <span className="ml-2">{t('bookDetail.goBack')}</span>
               </div>
@@ -95,9 +95,9 @@ export default function BookDetail() {
               }
               </div>
               <div className="flex flex-col gap-5 w-1/2 text-4xl">
-                <div className="text-ellipsis whitespace-nowrap">{t('bookDetail.title')}: {bookData?.title}</div>
-                <div className="text-ellipsis whitespace-nowrap">{t('bookDetail.author')}: {bookData?.author}</div>
-                <div className="text-ellipsis whitespace-nowrap">{t('bookDetail.description')}: {bookData?.description}</div>
+                <div className="text-ellipsis">{t('bookDetail.title')}: {bookData?.title}</div>
+                <div className="text-ellipsis">{t('bookDetail.author')}: {bookData?.author}</div>
+                <div className="text-ellipsis">{t('bookDetail.description')}: {bookData?.description}</div>
                 <div>{t('bookDetail.size')}: {calculateSize(bookData?.size || '0')}</div>
                 <div className="flex gap-5 items-center">
                   {

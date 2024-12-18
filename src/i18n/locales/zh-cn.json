@@ -26,7 +26,12 @@
     "uploadBtn": "上传",
     "submitBtn": "提交",
     "successTip": "分享成功，感谢您的分享",
-    "connectBtn": "连接钱包"
+    "connectBtn": "连接钱包",
+    "coverRequired": "封面图片是必填项",
+    "titleRequired": "标题是必填项",
+    "authorRequired": "作者是必填项",
+    "descriptionRequired": "描述是必填项",
+    "fileRequired": "文件是必填项"
   },
   "bookDetail": {
     "download": "下载",
