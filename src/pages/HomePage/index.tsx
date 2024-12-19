@@ -162,7 +162,7 @@ export default function HomePage() {
         {/* books section */}
         <section className="h-screen bg-fixed bg-cover bg-center bg-[#98efe4]">
           <div className="max-w-7xl h-full m-auto py-5 flex flex-col items-center justify-center">
-            <div className="w-full h-full grid grid-cols-4 gap-4 bg-white border border-black rounded-lg p-5">
+            <div className="w-full h-full grid gap-4 bg-white border border-black rounded-lg p-5" style={{gridTemplateColumns: "repeat(4, minmax(0, 1fr))"}}>
               {
                 books.map((book) => (
                   <div className="flex flex-col items-center gap-1"  key={book.id} onClick={() => navigator('/book/' + book.id)}>
