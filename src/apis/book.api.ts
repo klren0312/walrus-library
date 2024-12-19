@@ -18,6 +18,7 @@ export async function GetBooksApi (packageId: string) {
   const query = graphql(`
     query {
       objects (
+        last: 8
         filter: {
           type: "${packageId}::walrus_library::Book"
         }

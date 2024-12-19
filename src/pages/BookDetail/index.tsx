@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next'
 import WriteReview from '/@/components/WriteReview'
 import BookReviewList from '/@/components/BookReviewList'
 import { RollbackOutlined } from '@ant-design/icons'
+import './style.less'
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   '/pdf.worker.min.mjs',
@@ -64,71 +65,81 @@ export default function BookDetail() {
     <section className="w-full h-full bg-[#e4f0ef]">
       <div className="max-w-7xl h-full m-auto">
         <div className="w-full h-full flex flex-col items-center justify-center">
-          {
-            loading ?
-            <Spin /> :
-            <div className="relative w-full min-h-[80%] p-5 flex gap-5 border border-black rounded-lg">
-              <div onClick={() => navigate('/')} className="absolute right-0 flex items-center cursor-pointer" style={{top: '-1.5rem'}}>
-                <RollbackOutlined  />
-                <span className="ml-2">{t('bookDetail.goBack')}</span>
-              </div>
-              <div className="w-1/2 flex flex-col items-center justify-center">
-              {
-                bookType.includes('pdf') ?
-                <>
-                  <Document className="h-[43.75rem]" file={getBlobUrl(bookData?.blob_id || '')} onLoadSuccess={onDocumentLoadSuccess}>
-                    <Page height={700} pageNumber={pageNumber} />
-                  </Document>
-                  <Pagination className="mt-5" simple current={pageNumber} total={numPages} pageSize={1} onChange={handlePageChange} showSizeChanger={false} />
-                </> :
-                <div className="w-full h-[43.75rem]">
-                  <ReactReader
-                    url={getBlobUrl(bookData?.blob_id || '')}
-                    location={pageNumber}
-                    epubOptions={{spread: 'none'}}
-                    epubInitOptions={{
-                      openAs: 'epub',
-                    }}
-                    locationChanged={(epubcfi: string) => setPageNumber(parseInt(epubcfi))}
-                  />
+          <div className="relative w-full h-[90%] p-5 flex flex-col justify-between gap-5 border border-black rounded-lg">
+            <div className="absolute top-0 pt-5 box-border h-full overflow-y-auto" style={{right: "-210px"}}>
+              <BookReviewList bookReview={bookData?.book_review} />
+            </div>
+            {
+              loading ?
+              <Spin /> :
+              <>
+                <div onClick={() => navigate('/')} className="absolute right-0 flex items-center cursor-pointer" style={{top: '-1.5rem'}}>
+                  <RollbackOutlined  />
+                  <span className="ml-2">{t('bookDetail.goBack')}</span>
                 </div>
-              }
-              </div>
-              <div className="flex flex-col gap-5 w-1/2 text-4xl">
-                <div className="text-ellipsis">{t('bookDetail.title')}: {bookData?.title}</div>
-                <div className="text-ellipsis">{t('bookDetail.author')}: {bookData?.author}</div>
-                <div className="text-ellipsis">{t('bookDetail.description')}: {bookData?.description}</div>
-                <div>{t('bookDetail.size')}: {calculateSize(bookData?.size || '0')}</div>
-                <div className="flex gap-5 items-center">
-                  {
-                    downloadLoading ? <Spin /> :
+                <div className="flex flex-col">
+                  {/* 按钮组 */}
+                  <div className="flex gap-5 items-center">
+                    {
+                      downloadLoading ? <Spin /> :
+                      <div
+                        onClick={doDownload}
+                        className="inline-block cursor-pointer text-xl text-black border-2 border-[#98efe4] rounded-md px-4 py-1"
+                      >
+                        {t('bookDetail.download')}
+                      </div>
+                    }
                     <div
-                      onClick={doDownload}
-                      className="inline-block cursor-pointer text-xl text-black border-4 border-[#98efe4] rounded-md px-6 py-2"
+                      onClick={() => {
+                        window.open(`https://suiscan.xyz/testnet/object/${bookData?.id}`, '_blank')
+                      }}
+                      className="inline-block cursor-pointer text-xl text-black border-2 border-[#98efe4] rounded-md px-4 py-1"
                     >
-                      {t('bookDetail.download')}
+                      {t('bookDetail.toSuiScan')}
+                    </div>
+                    {/* 写书评 */}
+                    <div
+                      onClick={() => setWriteReviewOpen(true)}
+                      className="inline-block cursor-pointer text-xl text-black border-2 border-[#98efe4] rounded-md px-4 py-1"
+                    >
+                      {t('bookDetail.writeReview')}
+                    </div>
+                  </div>
+                  <div className="flex flex-col justify-between gap-5 mt-5 text-xl">
+                    <div className="flex flex-col gap-5">
+                      <div className="flex justify-between gap-5">
+                        <div className="text-ellipsis">{t('bookDetail.title')}: {bookData?.title}</div>
+                        <div className="text-ellipsis">{t('bookDetail.author')}: {bookData?.author}</div>
+                        <div>{t('bookDetail.size')}: {calculateSize(bookData?.size || '0')}</div>
+                      </div>
+                      <div className="the-description">{t('bookDetail.description')}: {bookData?.description}</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col items-center justify-center">
+                  {
+                    bookType.includes('pdf') ?
+                    <>
+                      <Document className="h-[37.5rem]" file={getBlobUrl(bookData?.blob_id || '')} onLoadSuccess={onDocumentLoadSuccess}>
+                        <Page height={600} pageNumber={pageNumber} />
+                      </Document>
+                      <Pagination className="mt-2" simple current={pageNumber} total={numPages} pageSize={1} onChange={handlePageChange} showSizeChanger={false} />
+                    </> :
+                    <div className="w-full h-[37.5rem]">
+                      <ReactReader
+                        url={getBlobUrl(bookData?.blob_id || '')}
+                        location={pageNumber}
+                        epubInitOptions={{
+                          openAs: 'epub',
+                        }}
+                        locationChanged={(epubcfi: string) => setPageNumber(parseInt(epubcfi))}
+                      />
                     </div>
                   }
-                  <div
-                    onClick={() => {
-                      window.open(`https://suiscan.xyz/testnet/object/${bookData?.id}`, '_blank')
-                    }}
-                    className="inline-block cursor-pointer text-xl text-black border-4 border-[#98efe4] rounded-md px-6 py-2"
-                  >
-                    {t('bookDetail.toSuiScan')}
-                  </div>
-                  {/* 写书评 */}
-                  <div
-                    onClick={() => setWriteReviewOpen(true)}
-                    className="inline-block cursor-pointer text-xl text-black border-4 border-[#98efe4] rounded-md px-6 py-2"
-                  >
-                    {t('bookDetail.writeReview')}
-                  </div>
                 </div>
-                <BookReviewList bookReview={bookData?.book_review} />
-              </div>
-            </div>
-          }
+              </>
+            }
+          </div>
         </div>
       </div>
       <WriteReview
