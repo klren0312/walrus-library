@@ -85,6 +85,7 @@ export default function BookDetail() {
                       <div
                         onClick={doDownload}
                         className="inline-block cursor-pointer text-xl text-black border-2 border-[#98efe4] rounded-md px-4 py-1"
+                        style={{borderWidth: '2px'}}
                       >
                         {t('bookDetail.download')}
                       </div>
@@ -94,6 +95,7 @@ export default function BookDetail() {
                         window.open(`https://suiscan.xyz/testnet/object/${bookData?.id}`, '_blank')
                       }}
                       className="inline-block cursor-pointer text-xl text-black border-2 border-[#98efe4] rounded-md px-4 py-1"
+                      style={{borderWidth: '2px'}}
                     >
                       {t('bookDetail.toSuiScan')}
                     </div>
@@ -101,6 +103,7 @@ export default function BookDetail() {
                     <div
                       onClick={() => setWriteReviewOpen(true)}
                       className="inline-block cursor-pointer text-xl text-black border-2 border-[#98efe4] rounded-md px-4 py-1"
+                      style={{borderWidth: '2px'}}
                     >
                       {t('bookDetail.writeReview')}
                     </div>
