@@ -52,6 +52,45 @@ pnpm run dev
 
 使用 Walrus Site 部署
 
+### 详细功能
+
+#### 1. 用户可以上传书籍（需要mint创作者nft）
+> 书籍文件和封面存储于walrus
+
+
+领取创作者nft
+
+https://github.com/user-attachments/assets/2288df1d-ef1f-437c-8a91-8c0171fd556c
+
+
+分享书籍
+
+https://github.com/user-attachments/assets/b99f52f2-f6b1-4b5e-89a6-720b1afee9c9
+
+
+
+#### 2. 可以预览书籍和下载
+
+
+https://github.com/user-attachments/assets/32157823-1dc1-4d9b-9c0c-390522a33905
+
+
+
+
+#### 3. 可以发表书评和查看书评
+> 书评markdown编辑器支持上传图片到walrus，书评markdown文本存于walrus
+
+
+
+https://github.com/user-attachments/assets/edf1fd66-8096-4ab5-a83a-4f9e05935274
+
+
+
+
+#### 4. 捐赠功能
+> 存储服务由平台付费，用户可以捐赠指定sui，可在nft中记录捐赠值，方便后续激励
+
+![image](https://github.com/user-attachments/assets/b2a51176-a79a-43ee-8a2f-633c0650e261)
 
 
 ### 作者
