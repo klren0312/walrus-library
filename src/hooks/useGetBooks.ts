@@ -20,6 +20,9 @@ export const useGetBooks = () => {
       if (res.pageInfo.hasNextPage) {
         setEndCursor(res.pageInfo.endCursor)
         return true
+      } else {
+        setEndCursor(null)
+        return false
       }
     }
     return false

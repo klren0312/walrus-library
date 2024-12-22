@@ -14,8 +14,9 @@ interface Props {
   writeReviewOpen: boolean
   setWriteReviewOpen: (open: boolean) => void
   submitSuccess: () => void
+  onCancel: () => void
 }
-export default function WriteReview({ bookId, writeReviewOpen, setWriteReviewOpen, submitSuccess }: Props) {
+export default function WriteReview({ bookId, writeReviewOpen, setWriteReviewOpen, submitSuccess, onCancel }: Props) {
   const [messageApi, contextHolder] = message.useMessage()
   const { t } = useTranslation()
   const [text, setText] = useState('')
@@ -97,6 +98,7 @@ export default function WriteReview({ bookId, writeReviewOpen, setWriteReviewOpe
       footer={() => <div className="flex justify-end">
         <Button loading={submitLoading} onClick={submitReview}>{t('bookDetail.submit')}</Button>
       </div>}
+      onCancel={onCancel}
     >
       <MdEditor
         value={text}
