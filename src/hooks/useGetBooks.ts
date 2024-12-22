@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { GetBooksApi } from '/@/apis/book.api'
 import { useNetworkVariable } from '/@/utils/networkConfig'
 import { BookData, useBooksStore } from '/@/stores/books'
 export const useGetBooks = () => {
   const { books, setBooks } = useBooksStore()
   const packageId = useNetworkVariable('packageId')
-  const [endCursor, setEndCursor] = useState<string | null>(null)
+  const endCursorRef = useRef<string | null>(null)
   const getBooks = async (endCursor: string | null = null) => {
     const res = await GetBooksApi(packageId, endCursor)
     if (res && res.nodes.length > 0) {
@@ -18,10 +18,10 @@ export const useGetBooks = () => {
         setBooks(books)
       }
       if (res.pageInfo.hasNextPage) {
-        setEndCursor(res.pageInfo.endCursor)
+        endCursorRef.current = res.pageInfo.endCursor
         return true
       } else {
-        setEndCursor(null)
+        endCursorRef.current = null
         return false
       }
     }
@@ -32,10 +32,10 @@ export const useGetBooks = () => {
   }, [packageId])
   // 提供分页方法
   const getNextPage = async () => {
-    if (!endCursor) {
+    if (!endCursorRef.current) {
       return false
     }
-    const hasNextPage = await getBooks(endCursor)
+    const hasNextPage = await getBooks(endCursorRef.current)
     return hasNextPage
   }
   return { books, getNextPage }
