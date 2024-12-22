@@ -16,7 +16,8 @@
     "review": "Latest Book Reviews",
     "donate": "Donate 1 SUI to support us",
     "donateSuccess": "Donate Success, Thank you for your support!",
-    "donateError": "Donate Error, Please try again"
+    "donateError": "Donate Error, Please try again",
+    "searchPlaceholder": "Search for books"
   },
   "upload": {
     "uploadTip": "Click or drag Cover Image to this area to upload",

@@ -33,6 +33,7 @@
     "react-pdf": "^9.1.1",
     "react-reader": "^2.0.11",
     "react-router-dom": "^7.0.2",
+    "react-search-box": "^3.0.0",
     "zustand": "^5.0.2"
   },
   "devDependencies": {

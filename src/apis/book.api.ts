@@ -14,15 +14,20 @@ const gqlClient = new SuiGraphQLClient({
  * @param packageId 包 ID
  * @returns 书籍
  */
-export async function GetBooksApi (packageId: string) {
+export async function GetBooksApi (packageId: string, endCursor: string | null = null) {
   const query = graphql(`
-    query {
+    query($endCursor: String) {
       objects (
-        last: 8
+        first: 10,
+        after: $endCursor,
         filter: {
           type: "${packageId}::walrus_library::Book"
         }
       ) {
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
         nodes {
           asMoveObject {
             contents {
@@ -35,8 +40,9 @@ export async function GetBooksApi (packageId: string) {
   `)
   const result = await gqlClient.query({
     query,
+    variables: { endCursor },
   })
-  return result.data?.objects.nodes
+  return result.data?.objects
 }
 
 /**

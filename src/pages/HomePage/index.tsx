@@ -4,7 +4,7 @@ import MintCreatorNftBtn from '/@/components/MintCreatorNftBtn'
 import { GetCreatorNftApi } from '/@/apis/common.api'
 import { useNetworkVariable } from '/@/utils/networkConfig'
 import { useCurrentAccount, useSignAndExecuteTransaction, useSuiClient } from '@mysten/dapp-kit'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import { CreatorNft, useCreatorStore } from '/@/stores/creator'
 import { useGetBooks } from '/@/hooks/useGetBooks'
 import { AnimationOnScroll } from 'react-animation-on-scroll'
@@ -30,13 +30,39 @@ export default function HomePage() {
   const account = useCurrentAccount()
   const [creator, setCreator] = useState<CreatorNft>()
   const { setCreatorNft } = useCreatorStore()
-  const books = useGetBooks()
+  const {books, getNextPage} = useGetBooks()
   const navigator = useNavigate()
   const [latestReview, setLatestReview] = useState<BookReview[]>([])
   const [currentReview, setCurrentReview] = useState<BookReview | undefined>(undefined)
   const [openReview, setOpenReview] = useState(false)
   const { mutate } = useSignAndExecuteTransaction()
   const client = useSuiClient()
+
+  const loadMoreRef = useRef<HTMLDivElement | null>(null)
+
+  const handleObserver = useCallback(async (entries: IntersectionObserverEntry[]) => {
+    const target = entries[0]
+    if (target.isIntersecting) {
+      getNextPage() // 调用获取下一页书籍的函数
+    }
+  }, [getNextPage])
+
+  useEffect(() => {
+    const option = {
+      root: null,
+      rootMargin: '20px',
+      threshold: 0
+    }
+    const observer = new IntersectionObserver(handleObserver, option)
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current)
+    }
+    return () => {
+      if (loadMoreRef.current) {
+        observer.unobserve(loadMoreRef.current)
+      }
+    }
+  }, [handleObserver])
 
   /**
    * 获取创作者nft
@@ -143,6 +169,7 @@ export default function HomePage() {
     }, 1 * 60 * 1000)
     return () => clearInterval(interval)
   }, [])
+
   return (
     <div className="relative w-full h-full">
       <section className="top-section fixed w-screen h-full">
@@ -162,26 +189,31 @@ export default function HomePage() {
         {/* books section */}
         <section className="h-screen bg-fixed bg-cover bg-center bg-[#98efe4]">
           <div className="max-w-7xl h-full m-auto py-5 flex flex-col items-center justify-center">
-            <div className="w-full h-full grid gap-4 bg-white border border-black rounded-lg p-5" style={{gridTemplateColumns: "repeat(4, minmax(0, 1fr))"}}>
-              {
-                books.map((book) => (
-                  <div className="flex flex-col items-center gap-1"  key={book.id} onClick={() => navigator('/book/' + book.id)}>
-                    <Tooltip color="cyan" placement="bottom" title={book.title}>
-                      <Image
-                        className="rounded-lg cursor-pointer shadow-lg"
-                        width={300}
-                        height={400}
-                        src={getBlobUrl(book.cover_blob_id)}
-                        placeholder={
-                          <Image width={300} height={400} src={bookBlockBase64} />
-                        }
-                        fallback={bookBlockBase64}
-                        preview={false}
-                      />
-                    </Tooltip>
-                  </div>
-                ))
-              }
+            <div
+              className="w-full h-full bg-white border border-black rounded-lg p-5 overflow-y-auto"
+            >
+              <div className="grid gap-4" style={{gridTemplateColumns: "repeat(4, minmax(0, 1fr))"}}>
+                {
+                  books.map((book) => (
+                    <div className="flex flex-col items-center gap-1"  key={book.id} onClick={() => navigator('/book/' + book.id)}>
+                      <Tooltip color="cyan" placement="bottom" title={book.title}>
+                        <Image
+                          className="rounded-lg cursor-pointer shadow-lg"
+                          width={300}
+                          height={400}
+                          src={getBlobUrl(book.cover_blob_id)}
+                          placeholder={
+                            <Image width={300} height={400} src={bookBlockBase64} />
+                          }
+                          fallback={bookBlockBase64}
+                          preview={false}
+                        />
+                      </Tooltip>
+                    </div>
+                  ))
+                }
+              </div>
+              <div ref={loadMoreRef} className="h-10"></div>
             </div>
           </div>
         </section>
