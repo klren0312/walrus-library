@@ -82,7 +82,8 @@ export default function WriteReview({ bookId, writeReviewOpen, setWriteReviewOpe
             setWriteReviewOpen(false)
             submitSuccess()
           },
-          onError: () => {
+          onError: (error) => {
+            console.log(error)
             messageApi.error(t('bookDetail.submitError'))
             setSubmitLoading(false)
           }

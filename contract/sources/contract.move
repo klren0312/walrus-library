@@ -232,7 +232,7 @@ public fun create_book(
     size,
     content_type,
   });
-  transfer::transfer(book, tx_context::sender(ctx));
+  transfer::share_object(book);
 }
 
 // 创建书评

@@ -6,9 +6,9 @@ export const MAINNET_HAI_SERVER = '0x0'
 export const WALRUS_LIBRARY_SERVER_TESTNET = '0xdd8a9d5e84ab6fc20dafa019b0d11c344b6c208bcb52ae9aff8c042196220a1e'
 export const WALRUS_LIBRARY_SERVER_DEVNET = '0xc09769c2fe3bf9379a65cb8e4e20aed5fd01168b36bb5b570b2c68b40acc14a4'
 
-export const WALRUS_PUBLISHER_TESTNET = 'https://publisher-walrus.zzes1314.cn/v1/store?epochs=200'
+// export const WALRUS_PUBLISHER_TESTNET = 'https://publisher-walrus.zzes1314.cn/v1/store?epochs=200'
 // export const WALRUS_PUBLISHER_TESTNET = 'http://127.0.0.1:31415/v1/store?epochs=200'
-// export const WALRUS_PUBLISHER_TESTNET = 'https://publisher.walrus-testnet.walrus.space/v1/store?epochs=200'
+export const WALRUS_PUBLISHER_TESTNET = 'https://publisher.walrus-testnet.walrus.space/v1/store?epochs=200'
 
 export const SUI_GRAPHQL_URL = 'https://sui-testnet.mystenlabs.com/graphql'
 

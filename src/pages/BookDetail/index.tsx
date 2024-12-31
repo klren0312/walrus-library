@@ -149,6 +149,7 @@ export default function BookDetail() {
         bookId={bookData?.id || ''}
         writeReviewOpen={writeReviewOpen}
         setWriteReviewOpen={setWriteReviewOpen}
+        onCancel={() => setWriteReviewOpen(false)}
         submitSuccess={
           () => {
             setTimeout(() => {
