@@ -9,6 +9,7 @@ import { ConnectButton, useCurrentAccount, useSignAndExecuteTransaction, useSuiC
 import { useNetworkVariable } from '/@/utils/networkConfig'
 import { useGetCreator } from '/@/hooks/useGetCreator'
 import { GetBookIdApi, InsertBookToDatabase } from '/@/apis/book.api'
+import { BanBlob } from '/@/utils/banBlob'
 
 const { Dragger } = Upload
 const { TextArea } = Input
@@ -120,8 +121,11 @@ export default function UploadPage() {
           await client.waitForTransaction({ digest: result.digest })
           form.resetFields()
           setImageUrl('')
-          messageApi.success(t('upload.successTip'))
           setSubmitLoading(false)
+          messageApi.success(t('upload.successTip'))
+          if (BanBlob.includes(value.file)) {
+            return
+          }
           const bookId = await GetBookIdApi(result.digest)
           if (bookId) {
             InsertBookToDatabase(account?.address || '', {

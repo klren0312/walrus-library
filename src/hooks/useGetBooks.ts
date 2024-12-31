@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { GetBooksApi } from '/@/apis/book.api'
 import { useNetworkVariable } from '/@/utils/networkConfig'
 import { BookData, useBooksStore } from '/@/stores/books'
+import { BanBlob } from '/@/utils/banBlob'
 export const useGetBooks = () => {
   const { books, setBooks } = useBooksStore()
   const packageId = useNetworkVariable('packageId')
@@ -11,10 +12,11 @@ export const useGetBooks = () => {
     if (res && res.nodes.length > 0) {
       if (endCursor) {
         // 分页添加到数组尾部
-        const afterBooks = res.nodes.map(item => item.asMoveObject?.contents?.json as BookData)
+        // 过滤掉banBlob，只保留一个
+        const afterBooks = res.nodes.map(item => item.asMoveObject?.contents?.json as BookData).filter(item => !BanBlob.includes(item.blob_id))
         setBooks([...books, ...afterBooks])
       } else {
-        const books = res.nodes.map(item => item.asMoveObject?.contents?.json as BookData)
+        const books = res.nodes.map(item => item.asMoveObject?.contents?.json as BookData).filter(item => !BanBlob.includes(item.blob_id))
         setBooks(books)
       }
       if (res.pageInfo.hasNextPage) {
