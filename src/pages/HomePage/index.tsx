@@ -173,7 +173,7 @@ export default function HomePage() {
   return (
     <div className="relative w-full h-full">
       <section className="top-section fixed w-screen h-full">
-        <video className="absolute top-0 left-0 w-full h-full object-cover" src={getBlobUrl('9nyheK4phlsnY9biZxbj2X9yS1y6_PZpYbFz2x5tDYQ')} autoPlay loop muted poster={posterBase64}/>
+        <video className="absolute top-0 left-0 w-full h-full object-cover" src="/videos/bg.mp4" autoPlay loop muted poster={posterBase64}/>
         <div className="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center">
           <img className="animate__animated animate__slideInDown" src="/walrus-library-transparent.svg" alt="Walrus Library" />
           <div className="animate__animated animate__slideInUp text-[#98efe4] text-7xl font-bold ">{t('home.title')}</div>
