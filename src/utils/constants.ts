@@ -28,20 +28,20 @@ export const WALRUS_PUBLISHER = [
 ]
 
 export const WALRUS_AGGREGATOR = [
-  'https://aggregator.walrus-testnet.walrus.space/v1/blobs',
-  'https://wal-aggregator-testnet.staketab.org/v1/blobs',
-  'https://walrus-testnet-aggregator.bartestnet.com/v1/blobs',
-  'https://walrus-testnet.blockscope.net/v1/blobs',
-  'https://walrus-testnet-aggregator.nodes.guru/v1/blobs',
-  'https://walrus-cache-testnet.overclock.run/v1/blobs',
-  'https://sui-walrus-testnet.bwarelabs.com/aggregator/v1/blobs',
-  'https://walrus-testnet-aggregator.stakin-nodes.com/v1/blobs',
-  'https://testnet-aggregator-walrus.kiliglab.io/v1/blobs',
-  'https://walrus-cache-testnet.latitude-sui.com/v1/blobs',
-  'https://walrus-testnet-aggregator.nodeinfra.com/v1/blobs',
-  'https://walrus-tn.juicystake.io:9443/v1/blobs',
-  'https://walrus-agg-testnet.chainode.tech:9002/v1/blobs',
-  'https://walrus-testnet-aggregator.starduststaking.com:11444/v1/blobs',
+  'https://aggregator.walrus-testnet.walrus.space/v1/blobs/',
+  'https://wal-aggregator-testnet.staketab.org/v1/blobs/',
+  'https://walrus-testnet-aggregator.bartestnet.com/v1/blobs/',
+  'https://walrus-testnet.blockscope.net/v1/blobs/',
+  'https://walrus-testnet-aggregator.nodes.guru/v1/blobs/',
+  'https://walrus-cache-testnet.overclock.run/v1/blobs/',
+  'https://sui-walrus-testnet.bwarelabs.com/aggregator/v1/blobs/',
+  'https://walrus-testnet-aggregator.stakin-nodes.com/v1/blobs/',
+  'https://testnet-aggregator-walrus.kiliglab.io/v1/blobs/',
+  'https://walrus-cache-testnet.latitude-sui.com/v1/blobs/',
+  'https://walrus-testnet-aggregator.nodeinfra.com/v1/blobs/',
+  'https://walrus-tn.juicystake.io:9443/v1/blobs/',
+  'https://walrus-agg-testnet.chainode.tech:9002/v1/blobs/',
+  'https://walrus-testnet-aggregator.starduststaking.com:11444/v1/blobs/',
 ]
 
 export const SUI_DECIMALS = 1000000000
